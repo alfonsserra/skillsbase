@@ -1,9 +1,8 @@
 package com.systelab.skillsbase.model.skill;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -21,6 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category")
+@ToString(exclude = {"parent"})
+@EqualsAndHashCode(of = {"id"})
 public class Category implements Serializable {
 
     @Id
@@ -31,14 +32,15 @@ public class Category implements Serializable {
     @Size(min = 1, max = 255)
     private String name;
 
-    private int level=0;
+    private int level = 0;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    List<Category > categoryList = new ArrayList<Category>();
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Category> categoryList = new ArrayList<Category>();
 
-    @ManyToOne
-    @JoinColumn(name = "PARENTCATEGORY")
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "PARENTCATEGORY", referencedColumnName = "id")
     private Category parent;
 
 }
