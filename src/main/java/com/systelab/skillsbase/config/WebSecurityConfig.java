@@ -47,7 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().
+        http.headers().frameOptions().sameOrigin();
+
+        http.csrf().ignoringAntMatchers("/console/**").disable().
                 authorizeRequests()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/v2/api-docs/**").permitAll()
@@ -56,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/skillsbase/v1/users/login").permitAll()
-                .antMatchers("/h2/**").permitAll()
+                .antMatchers("/console/**","/h2/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/skillsbase/v1/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -64,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-    }
+        }
 
     @Bean
     public BCryptPasswordEncoder encoder() {

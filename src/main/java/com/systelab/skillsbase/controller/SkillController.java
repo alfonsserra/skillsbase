@@ -21,61 +21,54 @@ import java.util.List;
 
 @Api(value = "Skill", description = "API for Skill management", tags = {"Skill"})
 @RestController()
-@CrossOrigin(origins = "*", allowedHeaders="*", exposedHeaders = "Authorization", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/skillsbase/v1/skills", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SkillController {
 
     @Autowired
     private SkillRepository skillRepository;
-
-/* Pagination is not supported for the client.
-    @ApiOperation(value = "Get all Skills", notes = "")
-    @GetMapping("Skills")
-    public ResponseEntity<Page<Skill>> getAllSkills(Pageable pageable) {
-        return ResponseEntity.ok(skillRepository.findAll(pageable));
-    }
-*/
+    
 
     @ApiOperation(value = "Get all Skills", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("")
     @PermitAll
-    public ResponseEntity<List<Skill>> getAllSkills() {
+    public ResponseEntity<List<Skill>> getAllCategories() {
         return ResponseEntity.ok(skillRepository.findAll());
     }
 
     @ApiOperation(value = "Get Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/{uid}")
-    public ResponseEntity<Skill> getSkill(@PathVariable("uid") Long skillId) {
+    public ResponseEntity<Skill> getCategory(@PathVariable("uid") Long skillId) {
         return this.skillRepository.findById(skillId).map(ResponseEntity::ok).orElseThrow(() -> new SkillNotFoundException(skillId));
 
     }
 
     @ApiOperation(value = "Create a Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("/skill")
-    public ResponseEntity<Skill> createSkill(@RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
-        Skill Skill = this.skillRepository.save(s);
+    @PostMapping("/category")
+    public ResponseEntity<Skill> createCategory(@RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
+        Skill skill = this.skillRepository.save(s);
 
-        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(Skill.getId()).toUri();
-        return ResponseEntity.created(uri).body(Skill);
+        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(skill.getId()).toUri();
+        return ResponseEntity.created(uri).body(skill);
     }
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/{uid}")
-    public ResponseEntity<Skill> updateSkill(@PathVariable("uid") Long skillId, @RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
+    public ResponseEntity<Skill> updateCategory(@PathVariable("uid") Long skillId, @RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
         return this.skillRepository
                 .findById(skillId)
                 .map(existing -> {
                     s.setId(skillId);
-                    Skill Skill = this.skillRepository.save(s);
+                    Skill Category = this.skillRepository.save(s);
                     URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-                    return ResponseEntity.created(selfLink).body(Skill);
+                    return ResponseEntity.created(selfLink).body(Category);
                 }).orElseThrow(() -> new SkillNotFoundException(skillId));
     }
 
 
     @ApiOperation(value = "Delete a Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("/{uid}")
-    public ResponseEntity<?> removeSkill(@PathVariable("uid") Long skillId) {
+    public ResponseEntity<?> removeCategory(@PathVariable("uid") Long skillId) {
         return this.skillRepository.findById(skillId)
                 .map(c -> {
                     skillRepository.delete(c);
