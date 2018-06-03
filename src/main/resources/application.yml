@@ -12,6 +12,9 @@ security:
     client-secret: XY7kmzoNzl100
     token-validity-seconds: 6060
 
+spring.jackson.serialization.fail-on-empty-beans: false
+
+
 spring:
   datasource:
     url: jdbc:h2:file:~/skillsbase

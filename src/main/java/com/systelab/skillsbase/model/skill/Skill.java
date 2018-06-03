@@ -52,8 +52,8 @@ public class Skill implements Serializable {
     List<Skill> children = new ArrayList<Skill>();
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_skill", referencedColumnName = "id")
+    @ManyToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_skill", referencedColumnName = "id",insertable=false,updatable=false)
     private Skill parentId;
 
 }
