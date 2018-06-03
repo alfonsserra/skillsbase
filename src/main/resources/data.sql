@@ -2,10 +2,10 @@ INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_
 INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (2, 'Reinhold', 'Mark', 'admin','$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu', 'ADMIN');
 INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (3, 'Systelab', 'Systelab', 'Systelab','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
 
-insert into skill values(1,10,'Top',null);
-insert into skill values(2,10,'General',1);
-insert into skill values(3,10,'Development',1);
-insert into skill values(4,10,'.Net',3);
-insert into skill values(5,10,'Java',3);
-insert into skill values(6,10,'C++',3);
-insert into skill values(7,10,'Big Data',1);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(1,'Top','category','',null);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(2,'General','category','',1);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(3,'Development','category','',1);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(4,'.Net','skill','',2);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(5,'Java','skill','',2);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(6,'C++','skill','',2);
+INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(7,'Big Data','category','',1);
