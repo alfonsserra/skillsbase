@@ -6,14 +6,17 @@ logging:
     org:
       springframework:
         web: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
 
 security:
   jwt:
     client-secret: XY7kmzoNzl100
     token-validity-seconds: 6060
-
-spring.jackson.serialization.fail-on-empty-beans: false
-
 
 spring:
   datasource:
