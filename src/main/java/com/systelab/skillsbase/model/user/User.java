@@ -1,5 +1,6 @@
 package com.systelab.skillsbase.model.user;
 
+import com.systelab.skillsbase.model.skill.SkillAssessment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -7,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -33,6 +36,9 @@ public class User {
     @Size(min = 1, max = 256)
     @Column(name = "user_password",length = 256, nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SkillAssessment> skillsAssessment = new ArrayList<SkillAssessment>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role")

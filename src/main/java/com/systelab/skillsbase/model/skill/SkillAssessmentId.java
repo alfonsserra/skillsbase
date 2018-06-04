@@ -14,7 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SkillAssessmentId implements Serializable {
 
-    private Long assessmentId;
+    private Long userId;
     private Long skillId;
 
     @Override
@@ -25,12 +25,12 @@ public class SkillAssessmentId implements Serializable {
             return false;
 
         SkillAssessmentId that = (SkillAssessmentId) o;
-        return Objects.equals(assessmentId, that.assessmentId) &&
+        return Objects.equals(userId, that.userId) &&
                 Objects.equals(skillId, that.skillId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(assessmentId, skillId);
+        return Objects.hash(userId, skillId);
     }
 }

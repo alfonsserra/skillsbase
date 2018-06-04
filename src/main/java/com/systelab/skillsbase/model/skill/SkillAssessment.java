@@ -1,6 +1,7 @@
 package com.systelab.skillsbase.model.skill;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.systelab.skillsbase.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "skill_assessment")
-@ToString(exclude = {"assessment","skill"})
+@ToString(exclude = {"user","skill"})
 
 public class SkillAssessment {
 
@@ -24,9 +25,9 @@ public class SkillAssessment {
     private SkillAssessmentId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("assessmentId")
+    @MapsId("userId")
     @JsonIgnore
-    private Assessment assessment;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("skillId")
@@ -37,10 +38,10 @@ public class SkillAssessment {
     private int interest=-1;
 
 
-    public SkillAssessment(Assessment assessment, Skill skill) {
-        this.assessment = assessment;
+    public SkillAssessment(User user, Skill skill) {
+        this.user = user;
         this.skill = skill;
-        this.id = new SkillAssessmentId(assessment.getId(), skill.getId());
+        this.id = new SkillAssessmentId(user.getId(), skill.getId());
     }
 
 }

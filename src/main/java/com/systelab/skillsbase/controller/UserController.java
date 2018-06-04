@@ -2,7 +2,9 @@ package com.systelab.skillsbase.controller;
 
 import com.systelab.skillsbase.Constants;
 import com.systelab.skillsbase.config.TokenProvider;
+import com.systelab.skillsbase.model.skill.SkillAssessment;
 import com.systelab.skillsbase.model.user.User;
+import com.systelab.skillsbase.repository.SkillRepository;
 import com.systelab.skillsbase.repository.UserNotFoundException;
 import com.systelab.skillsbase.repository.UserRepository;
 import io.swagger.annotations.Api;
@@ -26,6 +28,8 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
+import java.util.List;
 
 @Api(value = "User", description = "API for user management", tags = {"User"})
 @RestController
@@ -35,6 +39,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -65,7 +72,7 @@ public class UserController {
 
     @ApiOperation(value = "Get User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/{uid}")
-    public ResponseEntity<User> getUser(@PathVariable("uid") Long userId) {
+    public ResponseEntity<User> getUser(@PathVariable("uid") Long userId, Principal principal) {
         return this.userRepository.findById(userId).map(ResponseEntity::ok).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
@@ -75,6 +82,13 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
         u.setId(null);
         u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
+
+        List<SkillAssessment> assessments = u.getSkillsAssessment();
+        for (int i = 0; i < assessments.size(); i++) {
+            assessments.get(i).setUser(u);
+            assessments.get(i).setSkill(skillRepository.getOne(assessments.get(i).getId().getSkillId()));
+        }
+
         User user = this.userRepository.save(u);
 
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(user.getId()).toUri();
@@ -91,4 +105,5 @@ public class UserController {
                     return ResponseEntity.noContent().build();
                 }).orElseThrow(() -> new UserNotFoundException(userId));
     }
+
 }
