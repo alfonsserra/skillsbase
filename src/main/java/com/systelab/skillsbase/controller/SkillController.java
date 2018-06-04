@@ -10,6 +10,7 @@ import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -45,6 +46,7 @@ public class SkillController {
 
     @ApiOperation(value = "Create a Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/category")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Skill> createCategory(@RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
         Skill skill = this.skillRepository.save(s);
 
@@ -54,6 +56,7 @@ public class SkillController {
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/{uid}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Skill> updateCategory(@PathVariable("uid") Long skillId, @RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
         return this.skillRepository
                 .findById(skillId)
@@ -68,6 +71,7 @@ public class SkillController {
 
     @ApiOperation(value = "Delete a Skill", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("/{uid}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> removeCategory(@PathVariable("uid") Long skillId) {
         return this.skillRepository.findById(skillId)
                 .map(c -> {
