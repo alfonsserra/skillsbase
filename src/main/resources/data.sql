@@ -12,8 +12,8 @@ INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(7,'Big Data','
 
 
 insert INTO assessment(id,user_id) values(1,1);
-insert into skill_assessment(assessment_id,skill_id,rate) values(1,1,10);
-insert into skill_assessment(assessment_id,skill_id,rate) values(1,2,5);
-insert into skill_assessment(assessment_id,skill_id,rate) values(1,3,5);
-insert into skill_assessment(assessment_id,skill_id,rate) values(1,4,5);
-insert into skill_assessment(assessment_id,skill_id,rate) values(1,5,5);
+insert into skill_assessment(assessment_id,skill_id,proficiency,interest) values(1,1,10,10);
+insert into skill_assessment(assessment_id,skill_id,proficiency,interest) values(1,2,5,10);
+insert into skill_assessment(assessment_id,skill_id,proficiency,interest) values(1,3,5,10);
+insert into skill_assessment(assessment_id,skill_id,proficiency,interest) values(1,4,5,10);
+insert into skill_assessment(assessment_id,skill_id,proficiency,interest) values(1,5,5,10);

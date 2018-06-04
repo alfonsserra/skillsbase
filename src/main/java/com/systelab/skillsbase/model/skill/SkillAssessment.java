@@ -33,7 +33,9 @@ public class SkillAssessment {
     @JsonIgnore
     private Skill skill;
 
-    private int rate;
+    private int proficiency=-1;
+    private int interest=-1;
+
 
     public SkillAssessment(Assessment assessment, Skill skill) {
         this.assessment = assessment;
