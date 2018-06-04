@@ -12,4 +12,6 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
 
     Optional<Assessment> findById(@Param("id") Long id);
 
+    Optional<Assessment> findFirstByUserIdOrderByRealizationDate(@Param("userid") Long userId);
+
 }

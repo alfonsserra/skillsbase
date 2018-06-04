@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class Assessment {
     @Id
     @GeneratedValue
     private Long id;
+
+    private Date realizationDate;
 
     @ManyToOne(optional = false)
     private User user;
