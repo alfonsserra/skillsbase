@@ -48,7 +48,7 @@ public class Skill implements Serializable {
 
 
     @OneToMany(mappedBy = "parentId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @OrderBy("text ASC")
+    @OrderBy("position ASC")
     List<Skill> children = new ArrayList<Skill>();
 
     @JsonIgnore
