@@ -55,4 +55,33 @@ public class AssessmentController {
         User savedUser = this.userRepository.save(user);
         return ResponseEntity.ok(savedUser.getSkillsAssessment());
     }
+
+    @ApiOperation(value = "Save User Skill Assessment", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @PutMapping("/skill")
+    public ResponseEntity<SkillAssessment> saveUserSkillAssessment(@RequestBody @ApiParam(value = "SkillAssessment", required = true) @Valid SkillAssessment assessment, Principal principal) {
+        User user = this.userRepository.findByLogin(principal.getName());
+        assessment.setUser(user);
+        assessment.getId().setUserId(user.getId());
+
+        List<SkillAssessment> currentSkills = user.getSkillsAssessment();
+
+        boolean found = false;
+        for (int i = 0; i < currentSkills.size() && !found; i++) {
+            if (currentSkills.get(i).getId().getSkillId().longValue() == assessment.getId().getSkillId().longValue()) {
+                currentSkills.get(i).setProficiency(assessment.getProficiency());
+                currentSkills.get(i).setInterest(assessment.getInterest());
+                found=true;
+            }
+        }
+        if (!found) {
+            Skill skill = skillRepository.getOne(assessment.getId().getSkillId());
+            SkillAssessment skillAssessment = new SkillAssessment(user, skill);
+            skillAssessment.setProficiency(assessment.getProficiency());
+            skillAssessment.setInterest(assessment.getInterest());
+            currentSkills.add(skillAssessment);
+        }
+
+        User savedUser = this.userRepository.save(user);
+        return ResponseEntity.ok(assessment);
+    }
 }
