@@ -33,10 +33,10 @@ public class SummaryController {
         OrganizationSummary organizationSummary=new OrganizationSummary();
 
         List<SkillSummary> listskills=new ArrayList<>();
-        List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency) AS average FROM SkillAssessment e GROUP by e.skill ORDER BY average DESC").getResultList();
+        List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency),count(e) AS average FROM SkillAssessment e GROUP by e.skill ORDER BY average DESC").getResultList();
         for (Object[] p : skills) {
             Skill skill=(Skill)p[0];
-            listskills.add(new SkillSummary(skill.getId(),skill.getText(),(Double)p[1]));
+            listskills.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
         }
         organizationSummary.setTopTenSkills(listskills);
 
@@ -44,10 +44,10 @@ public class SummaryController {
         organizationSummary.setProficiency((Double)skillsAvg);
 
         List<SkillSummary> listsInterests=new ArrayList<>();
-        List<Object[]> interests = entityManager.createQuery("SELECT e.skill,AVG(e.interest) AS interest FROM SkillAssessment e GROUP by e.skill ORDER BY interest DESC").getResultList();
+        List<Object[]> interests = entityManager.createQuery("SELECT e.skill,AVG(e.interest) AS interest,count(e) FROM SkillAssessment e GROUP by e.skill ORDER BY interest DESC").getResultList();
         for (Object[] p : interests) {
             Skill skill=(Skill)p[0];
-            listsInterests.add(new SkillSummary(skill.getId(),skill.getText(),(Double)p[1]));
+            listsInterests.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
         }
         organizationSummary.setTopTenInterests(listsInterests);
 
@@ -67,7 +67,7 @@ public class SummaryController {
         List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency) AS average FROM SkillAssessment e GROUP by e.skill ORDER BY average DESC").getResultList();
         for (Object[] p : skills) {
             Skill skill=(Skill)p[0];
-            listskills.add(new SkillSummary(skill.getId(),skill.getText(),(Double)p[1]));
+            listskills.add(new SkillSummary(skill.getId(),skill.getText(),1l,(Double)p[1]));
         }
         userSummary.setTopTenSkills(listskills);
 
@@ -78,7 +78,7 @@ public class SummaryController {
         List<Object[]> interests = entityManager.createQuery("SELECT e.skill,AVG(e.interest) AS interest FROM SkillAssessment e GROUP by e.skill ORDER BY interest DESC").getResultList();
         for (Object[] p : interests) {
             Skill skill=(Skill)p[0];
-            listsInterests.add(new SkillSummary(skill.getId(),skill.getText(),(Double)p[1]));
+            listsInterests.add(new SkillSummary(skill.getId(),skill.getText(),1l,(Double)p[1]));
         }
         userSummary.setTopTenInterests(listsInterests);
 
@@ -87,4 +87,5 @@ public class SummaryController {
 
         return ResponseEntity.ok(userSummary);
     }
+
 }

@@ -11,5 +11,7 @@ public class SkillSummary {
 
     private Long id;
     private String text;
-    private Double counter;
+    private Long counter;
+    private Double rate;
+
 }
