@@ -14,7 +14,7 @@ public class OrganizationSummary {
     private Double proficiency;
     private Double interest;
 
-    private List<SkillSummary> topTenSkills;
-    private List<SkillSummary> topTenInterests;
+    private List<SkillSummary> topTenByProficiency;
+    private List<SkillSummary> topTenByInterest;
 
 }

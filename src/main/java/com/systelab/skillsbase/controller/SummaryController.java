@@ -38,7 +38,7 @@ public class SummaryController {
             Skill skill=(Skill)p[0];
             listskills.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
         }
-        organizationSummary.setTopTenSkills(listskills);
+        organizationSummary.setTopTenByProficiency(listskills);
 
         Object skillsAvg = entityManager.createQuery("SELECT AVG(e.proficiency) AS average FROM SkillAssessment e").getSingleResult();
         organizationSummary.setProficiency((Double)skillsAvg);
@@ -49,7 +49,7 @@ public class SummaryController {
             Skill skill=(Skill)p[0];
             listsInterests.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
         }
-        organizationSummary.setTopTenInterests(listsInterests);
+        organizationSummary.setTopTenByInterest(listsInterests);
 
         Object interestAvg = entityManager.createQuery("SELECT AVG(e.interest) AS average FROM SkillAssessment e").getSingleResult();
         organizationSummary.setInterest((Double)interestAvg);
