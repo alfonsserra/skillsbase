@@ -1,9 +1,8 @@
 package com.systelab.skillsbase.controller;
 
 import com.systelab.skillsbase.model.skill.Skill;
-import com.systelab.skillsbase.model.summary.OrganizationSummary;
-import com.systelab.skillsbase.model.summary.SkillSummary;
-import com.systelab.skillsbase.model.summary.UserSummary;
+import com.systelab.skillsbase.model.summary.*;
+import com.systelab.skillsbase.model.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -56,5 +55,33 @@ public class SummaryController {
 
         return ResponseEntity.ok(organizationSummary);
     }
+
+
+    @ApiOperation(value = "Get Skill Top ten users", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @GetMapping("/users/skill/{uid}")
+    @PermitAll
+    public ResponseEntity<UserRateSummary> getUserRateSummary(@PathVariable("uid") Long skillId) {
+        UserRateSummary userRateSummary=new UserRateSummary();
+
+        List<UserRate> listUsersByProficiency=new ArrayList<>();
+        List<Object[]> usersByProficiency = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id="+skillId+" ORDER BY a.proficiency DESC").getResultList();
+        for (Object[] p : usersByProficiency) {
+            User user=(User)p[0];
+            listUsersByProficiency.add(new UserRate(user,(Integer)p[1]));
+        }
+        userRateSummary.setTopTenByProficiency(listUsersByProficiency);
+
+
+        List<UserRate> listUsersByInterest=new ArrayList<>();
+        List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id="+skillId+" ORDER BY a.proficiency DESC").getResultList();
+        for (Object[] p : usersByInterest) {
+            User user=(User)p[0];
+            listUsersByProficiency.add(new UserRate(user,(Integer)p[1]));
+        }
+        userRateSummary.setTopTenByInterest(listUsersByInterest);
+
+        return ResponseEntity.ok(userRateSummary);
+    }
+
 
 }
