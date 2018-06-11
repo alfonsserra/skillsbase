@@ -32,7 +32,7 @@ public class SummaryController {
         OrganizationSummary organizationSummary=new OrganizationSummary();
 
         List<SkillSummary> listskills=new ArrayList<>();
-        List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency),count(e) AS average FROM SkillAssessment e GROUP by e.skill ORDER BY average DESC").getResultList();
+        List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency) AS proficiency,count(e) FROM SkillAssessment e GROUP by e.skill ORDER BY proficiency DESC").getResultList();
         for (Object[] p : skills) {
             Skill skill=(Skill)p[0];
             listskills.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
