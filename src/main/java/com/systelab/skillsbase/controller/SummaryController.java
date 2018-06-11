@@ -73,10 +73,10 @@ public class SummaryController {
 
 
         List<UserRate> listUsersByInterest=new ArrayList<>();
-        List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id="+skillId+" ORDER BY a.proficiency DESC").getResultList();
+        List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.interest FROM SkillAssessment a WHERE a.skill.id="+skillId+" ORDER BY a.interest DESC").getResultList();
         for (Object[] p : usersByInterest) {
             User user=(User)p[0];
-            listUsersByProficiency.add(new UserRate(user,(Integer)p[1]));
+            listUsersByInterest.add(new UserRate(user,(Integer)p[1]));
         }
         userRateSummary.setTopTenByInterest(listUsersByInterest);
 
