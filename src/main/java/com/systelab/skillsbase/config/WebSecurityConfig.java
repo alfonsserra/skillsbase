@@ -48,6 +48,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().frameOptions().sameOrigin();
 
+        // Angular client
+        http.authorizeRequests().antMatchers("/","/*.html", "/*.css", "/*.js", "/*.png", "/*.ttf", "/*.svg", "/i18n/**", "/assets/**").permitAll();
+
         http.csrf().ignoringAntMatchers("/console/**").disable().
                 authorizeRequests()
                 .antMatchers("/actuator/**").permitAll()
@@ -57,15 +60,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/skillsbase/v1/users/login").permitAll()
-                .antMatchers("/console/**","/h2/**").permitAll()
+                .antMatchers("/console/**", "/h2/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/skillsbase/v1/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http
-                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-        }
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+
+    }
 
     @Bean
     public BCryptPasswordEncoder encoder() {
