@@ -1,10 +1,10 @@
 INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (1, 'Penalver', 'Aritz', 'apenalver','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'USER');
-INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (2, 'Orozco', 'Jorge', 'jorozco','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
-INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (3, 'Galceran', 'Oscar', 'ogalceran','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
+INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (2, 'Orozco', 'Jorge', 'jorozco','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'USER');
+INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (3, 'Galceran', 'Oscar', 'ogalceran','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'USER');
 INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (4, 'Serra', 'Alfons', 'aserra','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
-INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (5, 'Vinola', 'Carlos', 'cvinola','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
-INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (6, 'Puig', 'Olga', 'opuig','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
-INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (7, 'Legemaate', 'Alex', 'alegemaate','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'ADMIN');
+INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (5, 'Vinola', 'Carlos', 'cvinola','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'USER');
+INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (6, 'Puig', 'Olga', 'opuig','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'USER');
+INSERT INTO users (id, user_surname, user_name, user_login, user_password, user_role) VALUES (7, 'Legemaate', 'Alex', 'alegemaate','$2a$10$9wXu9hshOrtZ7RopythgF.XP93XbKtISBJMpz4PFHG4zv6QjTGBzq', 'USER');
 
 INSERT INTO skill (id, text, type, comments, parent_skill) VALUES(0,'Top','category','',null);
 
@@ -323,7 +323,7 @@ INSERT INTO skill (id, text, type, comments, position, parent_skill) VALUES(2021
 INSERT INTO skill (id, text, type, comments, position, parent_skill) VALUES(20214,'Microsoft Power BI Basic Knowledge','skill','',7,63);
 INSERT INTO skill (id, text, type, comments, position, parent_skill) VALUES(20215,'Microsoft Power BI Administration','skill','',8,63);
 
-insert into skill_assessment(user_id,skill_id,proficiency,interest) values(1,24,5,10);
-insert into skill_assessment(user_id,skill_id,proficiency,interest) values(1,27,5,10);
-insert into skill_assessment(user_id,skill_id,proficiency,interest) values(1,40,5,10);
-insert into skill_assessment(user_id,skill_id,proficiency,interest) values(1,20215,5,10);
+insert into skill_assessment(user_id,skill_id,proficiency,interest) values(4,24,5,5);
+insert into skill_assessment(user_id,skill_id,proficiency,interest) values(4,27,5,5);
+insert into skill_assessment(user_id,skill_id,proficiency,interest) values(4,40,5,5);
+insert into skill_assessment(user_id,skill_id,proficiency,interest) values(4,20215,5,5);
