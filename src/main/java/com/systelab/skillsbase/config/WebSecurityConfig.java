@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin();
 
         // Angular client
-        http.authorizeRequests().antMatchers("/","/*.html", "/*.css", "/*.js", "/*.png", "/*.ttf", "/*.svg", "/i18n/**", "/assets/**").permitAll();
+        http.authorizeRequests().antMatchers("/", "/*.html", "/*.css", "/*.js", "/*.gif", "/*.png", "/*.ttf", "/*.svg", "/*.eot", "/*.woff", "/*.woff2", "/i18n/**", "/assets/**").permitAll();
 
         http.csrf().ignoringAntMatchers("/console/**").disable().
                 authorizeRequests()
