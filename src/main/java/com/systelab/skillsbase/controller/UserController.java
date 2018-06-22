@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "Change Password", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @PutMapping("/password")
+    @PostMapping("/password")
     public ResponseEntity<User> changePassword(@RequestParam("oldpassword") String oldPassword, @RequestParam("newpassword") String newPassword, Principal principal) {
 
         final Authentication authentication = authenticationManager.authenticate(
