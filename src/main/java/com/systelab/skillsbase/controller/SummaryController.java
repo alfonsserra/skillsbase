@@ -1,7 +1,10 @@
 package com.systelab.skillsbase.controller;
 
 import com.systelab.skillsbase.model.skill.Skill;
-import com.systelab.skillsbase.model.summary.*;
+import com.systelab.skillsbase.model.summary.OrganizationSummary;
+import com.systelab.skillsbase.model.summary.SkillSummary;
+import com.systelab.skillsbase.model.summary.UserRate;
+import com.systelab.skillsbase.model.summary.UserRateSummary;
 import com.systelab.skillsbase.model.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,29 +32,29 @@ public class SummaryController {
     @GetMapping("/organization")
     @PermitAll
     public ResponseEntity<OrganizationSummary> getGeneralSummary() {
-        OrganizationSummary organizationSummary=new OrganizationSummary();
+        OrganizationSummary organizationSummary = new OrganizationSummary();
 
-        List<SkillSummary> listskills=new ArrayList<>();
+        List<SkillSummary> listskills = new ArrayList<>();
         List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency) AS proficiency,count(e) FROM SkillAssessment e GROUP by e.skill ORDER BY proficiency DESC").getResultList();
         for (Object[] p : skills) {
-            Skill skill=(Skill)p[0];
-            listskills.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
+            Skill skill = (Skill) p[0];
+            listskills.add(new SkillSummary(skill.getId(), skill.getText(), (Long) p[2], (Double) p[1]));
         }
         organizationSummary.setTopTenByProficiency(listskills);
 
         Object skillsAvg = entityManager.createQuery("SELECT AVG(e.proficiency) AS average FROM SkillAssessment e").getSingleResult();
-        organizationSummary.setProficiency((Double)skillsAvg);
+        organizationSummary.setProficiency((Double) skillsAvg);
 
-        List<SkillSummary> listsInterests=new ArrayList<>();
+        List<SkillSummary> listsInterests = new ArrayList<>();
         List<Object[]> interests = entityManager.createQuery("SELECT e.skill,AVG(e.interest) AS interest,count(e) FROM SkillAssessment e GROUP by e.skill ORDER BY interest DESC").getResultList();
         for (Object[] p : interests) {
-            Skill skill=(Skill)p[0];
-            listsInterests.add(new SkillSummary(skill.getId(),skill.getText(),(Long)p[2],(Double)p[1]));
+            Skill skill = (Skill) p[0];
+            listsInterests.add(new SkillSummary(skill.getId(), skill.getText(), (Long) p[2], (Double) p[1]));
         }
         organizationSummary.setTopTenByInterest(listsInterests);
 
         Object interestAvg = entityManager.createQuery("SELECT AVG(e.interest) AS average FROM SkillAssessment e").getSingleResult();
-        organizationSummary.setInterest((Double)interestAvg);
+        organizationSummary.setInterest((Double) interestAvg);
 
         return ResponseEntity.ok(organizationSummary);
     }
@@ -61,22 +64,28 @@ public class SummaryController {
     @GetMapping("/users/skill/{uid}")
     @PermitAll
     public ResponseEntity<UserRateSummary> getUserRateSummary(@PathVariable("uid") Long skillId) {
-        UserRateSummary userRateSummary=new UserRateSummary();
+        UserRateSummary userRateSummary = new UserRateSummary();
 
-        List<UserRate> listUsersByProficiency=new ArrayList<>();
-        List<Object[]> usersByProficiency = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id="+skillId+" ORDER BY a.proficiency DESC").getResultList();
+        List<UserRate> listUsersByProficiency = new ArrayList<>();
+        List<Object[]> usersByProficiency = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id=" + skillId + " ORDER BY a.proficiency DESC").getResultList();
         for (Object[] p : usersByProficiency) {
-            User user=(User)p[0];
-            listUsersByProficiency.add(new UserRate(user,(Integer)p[1]));
+            User user = (User) p[0];
+            Integer rate=(Integer) p[1];
+            if (rate>3){
+                listUsersByProficiency.add(new UserRate(user, rate));
+            }
         }
         userRateSummary.setTopTenByProficiency(listUsersByProficiency);
 
 
-        List<UserRate> listUsersByInterest=new ArrayList<>();
-        List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.interest FROM SkillAssessment a WHERE a.skill.id="+skillId+" ORDER BY a.interest DESC").getResultList();
+        List<UserRate> listUsersByInterest = new ArrayList<>();
+        List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.interest FROM SkillAssessment a WHERE a.skill.id=" + skillId + " ORDER BY a.interest DESC").getResultList();
         for (Object[] p : usersByInterest) {
-            User user=(User)p[0];
-            listUsersByInterest.add(new UserRate(user,(Integer)p[1]));
+            User user = (User) p[0];
+            Integer rate=(Integer) p[1];
+            if (rate>3) {
+                listUsersByInterest.add(new UserRate(user,rate));
+            }
         }
         userRateSummary.setTopTenByInterest(listUsersByInterest);
 
