@@ -32,8 +32,8 @@ public class User {
     @Column(name = "user_name")
     private String name;
 
-    @Size(min = 1, max = 10)
-    @Column(name = "user_login",length = 10, nullable = false)
+    @Size(min = 1, max = 20)
+    @Column(name = "user_login",length = 20, nullable = false)
     private String login;
 
     @Size(min = 1, max = 256)
