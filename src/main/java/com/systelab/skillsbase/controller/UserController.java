@@ -55,13 +55,16 @@ public class UserController {
     @ApiOperation(value = "User Login", notes = "")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @PermitAll
-    public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
+    public ResponseEntity<User> authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
-        return ResponseEntity.ok().header(Constants.HEADER_STRING, Constants.TOKEN_PREFIX + token).build();
+
+
+
+        return ResponseEntity.ok().header(Constants.HEADER_STRING, Constants.TOKEN_PREFIX + token).body(this.userRepository.findByLogin(login));
     }
 
     @ApiOperation(value = "Change Password", notes = "", authorizations = {@Authorization(value = "Bearer")})
