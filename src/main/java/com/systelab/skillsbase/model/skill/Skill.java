@@ -38,7 +38,15 @@ public class Skill implements Serializable {
     @NotNull
     private SkillType type;
 
+    @Size(max = 4200)
     private String comments;
+
+    @Column(columnDefinition = "boolean default true")
+    private boolean useInStatistics=true;
+
+    @Column(columnDefinition = "int default -1")
+    private int companyInterest=-1;
+
 
     @Column(columnDefinition = "int default 0")
     private int position = 1;
