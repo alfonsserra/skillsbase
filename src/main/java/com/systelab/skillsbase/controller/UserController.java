@@ -64,6 +64,25 @@ public class UserController {
         return ResponseEntity.ok().header(Constants.HEADER_STRING, Constants.TOKEN_PREFIX + token).build();
     }
 
+    @ApiOperation(value = "Change Password", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @PutMapping("/password")
+    public ResponseEntity<User> changePassword(@RequestParam("oldpassword") String oldPassword, @RequestParam("newpassword") String newPassword, Principal principal) {
+
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(principal.getName(), oldPassword));
+
+        if (authentication.isAuthenticated()) {
+            User savedUser = null;
+            User user = this.userRepository.findByLogin(principal.getName());
+            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            savedUser = this.userRepository.save(user);
+            return ResponseEntity.ok(savedUser);
+
+        } else {
+            throw new SecurityException();
+        }
+    }
+
     @ApiOperation(value = "Get all Users", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("")
     public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
