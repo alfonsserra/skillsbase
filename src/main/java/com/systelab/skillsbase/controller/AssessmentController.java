@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(value = "Assessment", description = "API for user assessment", tags = {"Assessment"})
 @RestController
@@ -39,17 +40,16 @@ public class AssessmentController {
 
     @ApiOperation(value = "Save User Assessment", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("")
-    public ResponseEntity<List<SkillAssessment>> saveUserAssessment(@RequestBody @ApiParam(value = "Assessment", required = true) @Valid List<SkillAssessment> assessment, Principal principal) {
+    public ResponseEntity<List<SkillAssessment>> saveUserAssessment(@RequestBody @ApiParam(value = "Assessment", required = true) @Valid List<SkillAssessment> assessments, Principal principal) {
         User user = this.userRepository.findByLogin(principal.getName());
 
-        List<SkillAssessment> list = new ArrayList<>();
-        for (int i = 0; i < assessment.size(); i++) {
-            Skill skill = skillRepository.getOne(assessment.get(i).getId().getSkillId());
-            SkillAssessment skillAssessment = new SkillAssessment(user, skill);
-            skillAssessment.setInterest(assessment.get(i).getInterest());
-            skillAssessment.setProficiency(assessment.get(i).getProficiency());
-            list.add(skillAssessment);
-        }
+        List<SkillAssessment> list = assessments.stream().map(assessment -> {
+            SkillAssessment skillAssessment = new SkillAssessment(user, skillRepository.getOne(assessment.getId().getSkillId()));
+            skillAssessment.setInterest(assessment.getInterest());
+            skillAssessment.setProficiency(assessment.getProficiency());
+            return skillAssessment;
+        }).collect(Collectors.toList());
+
         user.setSkillsAssessment(list);
 
         User savedUser = this.userRepository.save(user);
@@ -70,7 +70,7 @@ public class AssessmentController {
             if (currentSkills.get(i).getId().getSkillId().longValue() == assessment.getId().getSkillId().longValue()) {
                 currentSkills.get(i).setProficiency(assessment.getProficiency());
                 currentSkills.get(i).setInterest(assessment.getInterest());
-                found=true;
+                found = true;
             }
         }
         if (!found) {

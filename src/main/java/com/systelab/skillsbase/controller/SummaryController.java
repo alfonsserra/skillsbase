@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(value = "Summary", description = "API for Summary management", tags = {"Summary"})
 @RestController()
@@ -34,23 +35,15 @@ public class SummaryController {
     public ResponseEntity<OrganizationSummary> getGeneralSummary() {
         OrganizationSummary organizationSummary = new OrganizationSummary();
 
-        List<SkillSummary> listskills = new ArrayList<>();
         List<Object[]> skills = entityManager.createQuery("SELECT e.skill,AVG(e.proficiency) AS proficiency,count(e) FROM SkillAssessment e GROUP by e.skill ORDER BY proficiency DESC").getResultList();
-        for (Object[] p : skills) {
-            Skill skill = (Skill) p[0];
-            listskills.add(new SkillSummary(skill.getId(), skill.getText(), (Long) p[2], (Double) p[1]));
-        }
+        List<SkillSummary> listskills = skills.stream().map(p -> new SkillSummary(((Skill) p[0]).getId(), ((Skill) p[0]).getText(), (Long) p[2], (Double) p[1])).collect(Collectors.toList());
         organizationSummary.setTopTenByProficiency(listskills);
 
         Object skillsAvg = entityManager.createQuery("SELECT AVG(e.proficiency) AS average FROM SkillAssessment e").getSingleResult();
         organizationSummary.setProficiency((Double) skillsAvg);
 
-        List<SkillSummary> listsInterests = new ArrayList<>();
         List<Object[]> interests = entityManager.createQuery("SELECT e.skill,AVG(e.interest) AS interest,count(e) FROM SkillAssessment e GROUP by e.skill ORDER BY interest DESC").getResultList();
-        for (Object[] p : interests) {
-            Skill skill = (Skill) p[0];
-            listsInterests.add(new SkillSummary(skill.getId(), skill.getText(), (Long) p[2], (Double) p[1]));
-        }
+        List<SkillSummary> listsInterests = interests.stream().map(p -> new SkillSummary(((Skill) p[0]).getId(), ((Skill) p[0]).getText(), (Long) p[2], (Double) p[1])).collect(Collectors.toList());
         organizationSummary.setTopTenByInterest(listsInterests);
 
         Object interestAvg = entityManager.createQuery("SELECT AVG(e.interest) AS average FROM SkillAssessment e").getSingleResult();
@@ -66,27 +59,12 @@ public class SummaryController {
     public ResponseEntity<UserRateSummary> getUserRateSummary(@PathVariable("uid") Long skillId) {
         UserRateSummary userRateSummary = new UserRateSummary();
 
-        List<UserRate> listUsersByProficiency = new ArrayList<>();
         List<Object[]> usersByProficiency = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id=" + skillId + " ORDER BY a.proficiency DESC").getResultList();
-        for (Object[] p : usersByProficiency) {
-            User user = (User) p[0];
-            Integer rate=(Integer) p[1];
-            if (rate>3){
-                listUsersByProficiency.add(new UserRate(user, rate));
-            }
-        }
+        List<UserRate> listUsersByProficiency = usersByProficiency.stream().map(p -> new UserRate((User) p[0],(Integer) p[1])).filter(ur ->ur.getRate()>3).collect(Collectors.toList());
         userRateSummary.setTopTenByProficiency(listUsersByProficiency);
 
-
-        List<UserRate> listUsersByInterest = new ArrayList<>();
         List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.interest FROM SkillAssessment a WHERE a.skill.id=" + skillId + " ORDER BY a.interest DESC").getResultList();
-        for (Object[] p : usersByInterest) {
-            User user = (User) p[0];
-            Integer rate=(Integer) p[1];
-            if (rate>3) {
-                listUsersByInterest.add(new UserRate(user,rate));
-            }
-        }
+        List<UserRate> listUsersByInterest = usersByInterest.stream().map(p -> new UserRate((User) p[0],(Integer) p[1])).filter(ur ->ur.getRate()>3).collect(Collectors.toList());
         userRateSummary.setTopTenByInterest(listUsersByInterest);
 
         return ResponseEntity.ok(userRateSummary);

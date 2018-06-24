@@ -62,8 +62,6 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
 
-
-
         return ResponseEntity.ok().header(Constants.HEADER_STRING, Constants.TOKEN_PREFIX + token).body(this.userRepository.findByLogin(login));
     }
 
@@ -106,10 +104,10 @@ public class UserController {
         u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
 
         List<SkillAssessment> assessments = u.getSkillsAssessment();
-        for (int i = 0; i < assessments.size(); i++) {
-            assessments.get(i).setUser(u);
-            assessments.get(i).setSkill(skillRepository.getOne(assessments.get(i).getId().getSkillId()));
-        }
+        assessments.forEach((assessment) -> {
+            assessment.setUser(u);
+            assessment.setSkill(skillRepository.getOne(assessment.getId().getSkillId()));
+        });
 
         User user = this.userRepository.save(u);
 
@@ -122,8 +120,8 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> removeUser(@PathVariable("uid") Long userId) {
         return this.userRepository.findById(userId)
-                .map(c -> {
-                    userRepository.delete(c);
+                .map(u -> {
+                    userRepository.delete(u);
                     return ResponseEntity.noContent().build();
                 }).orElseThrow(() -> new UserNotFoundException(userId));
     }
