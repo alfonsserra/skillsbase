@@ -58,8 +58,7 @@ public class SkillController {
     @PutMapping("/{uid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Skill> updateCategory(@PathVariable("uid") Long skillId, @RequestBody @ApiParam(value = "Skill", required = true) @Valid Skill s) {
-        return this.skillRepository
-                .findById(skillId)
+        return this.skillRepository.findById(skillId)
                 .map(existing -> {
                     s.setId(skillId);
                     Skill Category = this.skillRepository.save(s);

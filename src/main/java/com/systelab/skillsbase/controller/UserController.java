@@ -73,10 +73,9 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(principal.getName(), oldPassword));
 
         if (authentication.isAuthenticated()) {
-            User savedUser = null;
             User user = this.userRepository.findByLogin(principal.getName());
             user.setPassword(bCryptPasswordEncoder.encode(newPassword));
-            savedUser = this.userRepository.save(user);
+            User savedUser = this.userRepository.save(user);
             return ResponseEntity.ok(savedUser);
 
         } else {
@@ -99,17 +98,16 @@ public class UserController {
     @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/user")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
-        u.setId(null);
-        u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
+    public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User newUser) {
+        newUser.setId(null);
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
 
-        List<SkillAssessment> assessments = u.getSkillsAssessment();
-        assessments.forEach((assessment) -> {
-            assessment.setUser(u);
+        newUser.getSkillsAssessment().forEach((assessment) -> {
+            assessment.setUser(newUser);
             assessment.setSkill(skillRepository.getOne(assessment.getId().getSkillId()));
         });
 
-        User user = this.userRepository.save(u);
+        User user = this.userRepository.save(newUser);
 
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(user);

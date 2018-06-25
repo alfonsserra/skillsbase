@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,11 +59,11 @@ public class SummaryController {
         UserRateSummary userRateSummary = new UserRateSummary();
 
         List<Object[]> usersByProficiency = entityManager.createQuery("SELECT a.user,a.proficiency FROM SkillAssessment a WHERE a.skill.id=" + skillId + " ORDER BY a.proficiency DESC").getResultList();
-        List<UserRate> listUsersByProficiency = usersByProficiency.stream().map(p -> new UserRate((User) p[0],(Integer) p[1])).filter(ur ->ur.getRate()>3).collect(Collectors.toList());
+        List<UserRate> listUsersByProficiency = usersByProficiency.stream().map(p -> new UserRate((User) p[0], (Integer) p[1])).filter(ur -> ur.getRate() > 3).collect(Collectors.toList());
         userRateSummary.setTopTenByProficiency(listUsersByProficiency);
 
         List<Object[]> usersByInterest = entityManager.createQuery("SELECT a.user,a.interest FROM SkillAssessment a WHERE a.skill.id=" + skillId + " ORDER BY a.interest DESC").getResultList();
-        List<UserRate> listUsersByInterest = usersByInterest.stream().map(p -> new UserRate((User) p[0],(Integer) p[1])).filter(ur ->ur.getRate()>3).collect(Collectors.toList());
+        List<UserRate> listUsersByInterest = usersByInterest.stream().map(p -> new UserRate((User) p[0], (Integer) p[1])).filter(ur -> ur.getRate() > 3).collect(Collectors.toList());
         userRateSummary.setTopTenByInterest(listUsersByInterest);
 
         return ResponseEntity.ok(userRateSummary);
