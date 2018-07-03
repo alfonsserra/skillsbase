@@ -43,14 +43,11 @@ public class AssessmentController {
     public ResponseEntity<List<SkillAssessment>> saveUserAssessment(@RequestBody @ApiParam(value = "Assessment", required = true) @Valid List<SkillAssessment> assessments, Principal principal) {
         User user = this.userRepository.findByLogin(principal.getName());
 
-        List<SkillAssessment> list = assessments.stream().map(assessment -> {
-            SkillAssessment skillAssessment = new SkillAssessment(user, skillRepository.getOne(assessment.getId().getSkillId()));
-            skillAssessment.setInterest(assessment.getInterest());
-            skillAssessment.setProficiency(assessment.getProficiency());
-            return skillAssessment;
-        }).collect(Collectors.toList());
-
-        user.setSkillsAssessment(list);
+        for (int i=0;i<assessments.size();i++) {
+            assessments.get(i).setUser(user);
+            assessments.get(i).getId().setUserId(user.getId());
+            addAssessment(user,assessments.get(i));
+        }
 
         User savedUser = this.userRepository.save(user);
         return ResponseEntity.ok(savedUser.getSkillsAssessment());
@@ -63,7 +60,16 @@ public class AssessmentController {
         assessment.setUser(user);
         assessment.getId().setUserId(user.getId());
 
+        addAssessment(user,assessment);
+
+        User savedUser = this.userRepository.save(user);
+        return ResponseEntity.ok(assessment);
+    }
+
+    public void addAssessment(User user,SkillAssessment assessment) {
+
         List<SkillAssessment> currentSkills = user.getSkillsAssessment();
+
 
         boolean found = false;
         for (int i = 0; i < currentSkills.size() && !found; i++) {
@@ -80,8 +86,6 @@ public class AssessmentController {
             skillAssessment.setInterest(assessment.getInterest());
             currentSkills.add(skillAssessment);
         }
-
-        User savedUser = this.userRepository.save(user);
-        return ResponseEntity.ok(assessment);
     }
+
 }
