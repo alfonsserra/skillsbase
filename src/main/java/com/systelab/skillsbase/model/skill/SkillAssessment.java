@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "skill_assessment")
 @ToString(exclude = {"user","skill"})
